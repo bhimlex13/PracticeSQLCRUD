@@ -1,6 +1,9 @@
 package com.example.practicesqlcrud;
 
+import android.annotation.SuppressLint;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,15 +13,27 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
 
+    DatabaseHelper db;
+    TextView text;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+
+        db = new DatabaseHelper(MainActivity.this);
+//        db.deleteDatabase(MainActivity.this);
+        db.getReadableDatabase();
+
+        text = findViewById(R.id.textShow);
+
+        Cursor cursor = db.getAllProductsById(1);
+        cursor.move(1);
+
+        String aaa = cursor.getString(0);
+
+        text.setText(aaa);
+
     }
 }
